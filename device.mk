@@ -130,6 +130,7 @@ PRODUCT_PACKAGES += \
 # Sensors HAL
 PRODUCT_PACKAGES += \
     calmodule.cfg \
+    libcalmodule_common \
     sensors.msm8909 \
     sensors.native
 
