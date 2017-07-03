@@ -2,6 +2,7 @@
  * Copyright (C) 2008 The Android Open Source Project
  * Copyright (C) 2014 The Linux Foundation. All rights reserved.
  * Copyright (C) 2016 The CyanogenMod Project
+ * Copyright (C) 2017 The LineageOS Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +23,6 @@
 #include <cutils/log.h>
 
 #include <stdint.h>
-#include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
 #include <errno.h>
@@ -42,16 +42,17 @@ static struct light_state_t g_notification;
 static struct light_state_t g_battery;
 static int g_attention = 0;
 
+char const*const RED_LED_FILE
+        = "/sys/class/leds/red/brightness";
+
+char const*const GREEN_LED_FILE
+        = "/sys/class/leds/green/brightness";
+
+char const*const BLUE_LED_FILE
+        = "/sys/class/leds/blue/brightness";
+
 char const*const LCD_FILE
         = "/sys/class/leds/lcd-backlight/brightness";
-
-/* libqmi_oem_api.so */
-#define QMI_HUAWEI_NOT_ID 0x8F
-extern int oem_qmi_common_stream_from_modem_len(int id,
-                                                void *buf_in,
-                                                size_t buf_in_size,
-                                                void *buf_out,
-                                                size_t *buf_out_size);
 
 /**
  * device methods
@@ -114,60 +115,26 @@ set_light_backlight(struct light_device_t* dev,
     return err;
 }
 
-struct qmi_huawei_not {
-    unsigned int color;
-    int flashOnMS;
-    int flashOffMS;
-    int flashMode;
-} __attribute__((packed));
-
 static int
 set_speaker_light_locked(struct light_device_t* dev,
         struct light_state_t const* state)
 {
     int red, green, blue;
-    int blink;
-    int onMS, offMS;
     unsigned int colorRGB;
-    int ret;
-    struct qmi_huawei_not notifConfig;
-    size_t buf_out_size = sizeof(notifConfig);
-    char buf_out = 0;
 
     if(!dev) {
         return -1;
     }
 
-    switch (state->flashMode) {
-        case LIGHT_FLASH_TIMED:
-            onMS = state->flashOnMS;
-            offMS = state->flashOffMS;
-            break;
-        case LIGHT_FLASH_NONE:
-        default:
-            onMS = 0;
-            offMS = 0;
-            break;
-    }
-
     colorRGB = state->color;
 
-#if 0
-    ALOGD("set_speaker_light_locked mode %d, colorRGB=%08X, onMS=%d, offMS=%d\n",
-            state->flashMode, colorRGB, onMS, offMS);
-#endif
+    red = (colorRGB >> 16) & 0xFF;
+    green = (colorRGB >> 8) & 0xFF;
+    blue = colorRGB & 0xFF;
 
-    notifConfig.color = colorRGB;
-    notifConfig.flashMode = state->flashMode;
-    notifConfig.flashOnMS = onMS;
-    notifConfig.flashOffMS = offMS;
-
-    ret = oem_qmi_common_stream_from_modem_len(QMI_HUAWEI_NOT_ID, &notifConfig,
-                                               sizeof(notifConfig), &buf_out,
-                                               &buf_out_size);
-    if (ret || buf_out_size != 1)
-        ALOGE("failed to write notification LED ret=%d buf_out_size=%d\n",
-              ret, buf_out_size);
+    write_int(RED_LED_FILE, red);
+    write_int(GREEN_LED_FILE, green);
+    write_int(BLUE_LED_FILE, blue);
 
     return 0;
 }
@@ -175,10 +142,10 @@ set_speaker_light_locked(struct light_device_t* dev,
 static void
 handle_speaker_battery_locked(struct light_device_t* dev)
 {
-    if (is_lit(&g_notification)) {
-        set_speaker_light_locked(dev, &g_notification);
-    } else {
+    if (is_lit(&g_battery)) {
         set_speaker_light_locked(dev, &g_battery);
+    } else {
+        set_speaker_light_locked(dev, &g_notification);
     }
 }
 
@@ -285,7 +252,7 @@ struct hw_module_t HAL_MODULE_INFO_SYM = {
     .version_major = 1,
     .version_minor = 0,
     .id = LIGHTS_HARDWARE_MODULE_ID,
-    .name = "cherry lights Module",
+    .name = "Huawei lights Module",
     .author = "Google, Inc., dianlujitao",
     .methods = &lights_module_methods,
 };
