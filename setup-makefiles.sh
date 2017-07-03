@@ -17,6 +17,11 @@
 
 set -e
 
+# Required!
+export DEVICE=scale
+export DEVICE_COMMON=msm8909-common
+export VENDOR=huawei
+
 INITIAL_COPYRIGHT_YEAR=2015
 
 # Load extractutils and do some sanity checks

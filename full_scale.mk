@@ -1,6 +1,5 @@
 #
-# Copyright (C) 2016 The CyanogenMod Project
-#           (C) 2017 The LineageOS Project
+# Copyright (C) 2017 The LineageOS Project
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,11 +12,17 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+#
 
-LOCAL_PATH := $(call my-dir)
+# Inherit from those products. Most specific first.
+$(call inherit-product, $(SRC_TARGET_DIR)/product/full_base_telephony.mk)
 
-ifneq ($(filter scale,$(TARGET_DEVICE)),)
+# Inherit device configuration
+$(call inherit-product, device/huawei/scale/device.mk)
 
-include $(call all-makefiles-under,$(LOCAL_PATH))
-
-endif
+# Device identifier. This must come after all inclusions
+PRODUCT_DEVICE := scale
+PRODUCT_NAME := full_scale
+PRODUCT_BRAND := Huawei
+PRODUCT_MODEL := scale
+PRODUCT_MANUFACTURER := HUAWEI

@@ -1,6 +1,5 @@
 #
-# Copyright (C) 2016 The CyanogenMod Project
-#           (C) 2017 The LineageOS Project
+# Copyright (C) 2017 The LineageOS Project
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,10 +13,5 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-LOCAL_PATH := $(call my-dir)
-
-ifneq ($(filter scale,$(TARGET_DEVICE)),)
-
-include $(call all-makefiles-under,$(LOCAL_PATH))
-
-endif
+PRODUCT_MAKEFILES := \
+    $(LOCAL_DIR)/full_scale.mk

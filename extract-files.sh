@@ -17,6 +17,11 @@
 
 set -e
 
+# Required!
+export DEVICE=scale
+export DEVICE_COMMON=msm8909-common
+export VENDOR=huawei
+
 # Load extractutils and do some sanity checks
 MY_DIR="${BASH_SOURCE%/*}"
 if [[ ! -d "$MY_DIR" ]]; then MY_DIR="$PWD"; fi

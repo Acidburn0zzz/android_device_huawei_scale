@@ -1,6 +1,6 @@
 #
 # Copyright (C) 2016 The CyanogenMod Project
-#           (C) 2017 The LineageOS Project
+#                 (C) 2017 The LineageOS Project
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -16,9 +16,15 @@
 
 FORCE_32_BIT := true
 
-include device/cyanogen/msm8916-common/BoardConfigCommon.mk
+include device/huawei/msm8909-common/BoardConfigCommon.mk
 
-VENDOR_PATH := device/huawei/msm8916-common
+VENDOR_PATH := device/huawei/scale
+
+# Assert
+TARGET_OTA_ASSERT_DEVICE := Honor4a,honor4a,Honor4A,honor4A,y6,Y6,scale,Scale
+
+# inherit from the proprietary version
+-include vendor/huawei/scale/BoardConfigVendor.mk
 
 # Audio
 USE_XML_AUDIO_POLICY_CONF := 1
@@ -52,12 +58,12 @@ USE_DEVICE_SPECIFIC_GPS := true
 TARGET_USE_COMPAT_GRALLOC_ALIGN := true
 
 # Init
-TARGET_LIBINIT_MSM8916_DEFINES_FILE := $(VENDOR_PATH)/init/init_cherry.cpp
+TARGET_LIBINIT_MSM8909_DEFINES_FILE := $(VENDOR_PATH)/init/init_scale.cpp
 TARGET_UNIFIED_DEVICE := true
 
 # Kernel
 TARGET_KERNEL_SOURCE := kernel/huawei/msm8916
-TARGET_KERNEL_CONFIG := lineageos_cherry_defconfig
+TARGET_KERNEL_CONFIG := lineageos_scale_defconfig
 
 # Lights
 TARGET_PROVIDES_LIBLIGHT := true
@@ -111,4 +117,4 @@ USE_SENSOR_MULTI_HAL := true
 TARGET_PROVIDES_WCNSS_QMI := true
 
 # inherit from the proprietary version
--include vendor/huawei/msm8916-common/BoardConfigVendor.mk
+-include vendor/huawei/msm8909-common/BoardConfigVendor.mk

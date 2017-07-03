@@ -14,13 +14,21 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-$(call inherit-product-if-exists, vendor/huawei/msm8916-common/msm8916-common-vendor.mk)
+$(call inherit-product-if-exists, vendor/huawei/msm8909-common/msm8909-common-vendor.mk)
+
+VENDOR_PATH := device/huawei/scale
 
 # Must define platform variant before including any common things
-TARGET_BOARD_PLATFORM_VARIANT := msm8916
+TARGET_BOARD_PLATFORM_VARIANT := msm8909
 
 # Overlay
 DEVICE_PACKAGE_OVERLAYS += $(LOCAL_PATH)/overlay
+
+$(call inherit-product, vendor/huawei/scale/scale-vendor.mk)
+
+# NFC
+PRODUCT_COPY_FILES += \
+    $(VENDOR_PATH)/configs/nfc-nci.conf:system/etc/nfc-nci.conf
 
 # Permissions
 PRODUCT_COPY_FILES += \
@@ -73,7 +81,7 @@ PRODUCT_COPY_FILES += \
 
 # Camera
 PRODUCT_PACKAGES += \
-    camera.msm8916 \
+    camera.msm8909 \
     Snap
 
 # Compat symbols
@@ -82,7 +90,7 @@ PRODUCT_PACKAGES += \
 
 # GPS
 PRODUCT_PACKAGES += \
-    gps.msm8916
+    gps.msm8909
 
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/gps/flp.conf:system/etc/flp.conf \
@@ -99,7 +107,7 @@ PRODUCT_COPY_FILES += \
 
 # Lights
 PRODUCT_PACKAGES += \
-    lights.msm8916
+    lights.msm8909
 
 # Media
 PRODUCT_COPY_FILES += \
@@ -122,7 +130,7 @@ PRODUCT_PACKAGES += \
 # Sensors HAL
 PRODUCT_PACKAGES += \
     calmodule.cfg \
-    sensors.msm8916 \
+    sensors.msm8909 \
     sensors.native
 
 PRODUCT_COPY_FILES += \
@@ -150,5 +158,5 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/wifi/WCNSS_qcom_wlan_nv_4x.bin:system/etc/firmware/wlan/prima/WCNSS_qcom_wlan_nv_4x.bin \
     $(LOCAL_PATH)/wifi/WCNSS_wlan_dictionary.dat:system/etc/firmware/wlan/prima/WCNSS_wlan_dictionary.dat
 
-# Inherit the rest from msm8916-common
-$(call inherit-product, device/cyanogen/msm8916-common/msm8916.mk)
+# Inherit the rest from msm8909-common
+$(call inherit-product, device/huawei/msm8909-common/msm8909.mk)
